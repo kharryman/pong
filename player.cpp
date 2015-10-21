@@ -1,21 +1,22 @@
 #include "player.h"
 #include <string>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
+
 using namespace std;
 
 Player::Player() {
   name = "Default";
-  posY = 0.0;
-  score = 0;
+  posX1 = 0.6;
+  posY1 = 0.3;
+  posX2 = 0.5;
+  posY2 = 0.8;
 }
 
 Player::Player(std::string name) {
   this->name = name;
-  posY = 0.0;
   score = 0;
-}
-
-float Player::getPosY() {
-  return posY;
 }
 
 string Player::getName() {
@@ -26,9 +27,7 @@ int Player::getScore() {
   return score;
 }
 
-void Player::setPosY(int posY) {
-  this->posY = posY;
-}
+
 
 void Player::setName(string name) {
   this->name = name;

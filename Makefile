@@ -1,13 +1,13 @@
 # Specify the compiler
 CC=g++
-LL= -lGL -lglut
+LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm
 
 #This command will be called 
 #when you run 'make'
 all: pong
 
 pong: game.o player.o
-	$(CC) Pong.cpp game.o player.o  -framework OpenGL -framework GLUT -I/usr/local/include -lglfw3  -o pong 
+	$(CC) pong.cpp game.o player.o $(LFLAGS)  -o pong
 
 #Each class will need its own 
 #object file. For each class you create

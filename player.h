@@ -1,17 +1,26 @@
 #include <iostream>
 #include <string>
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>
+#include <GLUT/glut.h>
 
 class Player {
 
   private:
     //we may not even need posX
     //for pong
-    float posX; 
-    float posY;
     std::string name;
     int score;
+    
+
+
 
   public:
+    float posX1; 
+    float posY1;
+    float posX2;
+    float posY2;
+    
     Player();
     Player(std::string name);
 
@@ -22,4 +31,5 @@ class Player {
     void setPosY(int posY);
     void setName(std::string name);
     void setScore(int score);
+    void movePaddleUp();
 };
