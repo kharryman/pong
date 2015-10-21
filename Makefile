@@ -1,6 +1,6 @@
 # Specify the compiler
 CC=g++
-LFLAGS = -lrt -lX11 -lGLU -lGL -pthread -lm
+LFLAGS =  -lX11 -lGLU -lGL -I/usr/X11R6/include -L/usr/X11R6/lib -pthread -lm
 
 #This command will be called 
 #when you run 'make'
