@@ -1,9 +1,5 @@
 #include <iostream>
 #include <string>
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <GLUT/glut.h>
-
 class Player {
 
   private:

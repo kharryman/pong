@@ -1,8 +1,5 @@
 #include "player.h"
 #include <string>
-#include <OpenGL/gl.h>
-#include <OpenGL/glu.h>
-#include <GLUT/glut.h>
 
 using namespace std;
 
