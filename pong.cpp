@@ -23,8 +23,8 @@
 #include <X11/keysym.h>
 #include <GL/glx.h>
 
-
 #include <GL/glut.h>
+#include <string>
 
 
 using namespace std;
@@ -49,6 +49,7 @@ void physics(Game *game);
 void render(Game *game);
 void set_mouse_position(int x, int y);
 void show_mouse_cursor(const int onoff);
+void show_hud(int score1, int score2);
 
 
 int keys[65536];
@@ -115,6 +116,7 @@ void render(Game *g)
    //Paddle 2
    glRectf(-0.6f, -0.3f, -0.5f, -0.8f);
  
+   show_hud(p1.getScore(), p2.getScore());
 
 }
 
@@ -166,8 +168,34 @@ void set_title(void)
  {
    //Set the window title bar.
    XMapWindow(dpy, win);
-   XStoreName(dpy, win, "CS335 - Asteroids template");
+   XStoreName(dpy, win, "CS335 - PONG!");
  }
+
+void show_hud(int in_score1, int in_score2){
+    glPushMatrix();
+    glColor3ub(255,255,255);
+    //Print player 1's score:
+    glTranslatef(0.0, 1.0, 0.0);
+    glScalef(1/8.0, 1/8.0, 1/8.0);
+    string str1="Player 1 Score:" + in_score1;
+    string str2="Player 2 Score:" + in_score2;
+     
+    for(unsigned int i=0; i<str1.length(); i++)
+    {
+        glutStrokeCharacter(GLUT_STROKE_ROMAN,str1[i]);
+    }
+    //Print player 2's score:
+    glScalef(8.0, 8.0, 8.0);
+    glTranslatef(xres/2.0, 1.0, 0.0);
+    glScalef(1/8.0, 1/8.0, 1/8.0);
+
+    for(unsigned int i=0; i<str2.length(); i++)
+    {
+        glutStrokeCharacter(GLUT_STROKE_ROMAN,str2[i]);
+    }
+
+    glPopMatrix();
+}
 
  void reshape_window(int width, int height)
  {
@@ -184,6 +212,11 @@ void set_title(void)
  void init_opengl(void)
  {
   //OpenGL initialization
+  char fakeParam[] = "fake";
+  char *fakeargv[] = { fakeParam, NULL };
+  int fakeargc = 1;
+  glutInit( &fakeargc, fakeargv );
+
   glViewport(0, 0, xres, yres);
   //Initialize matrices
   glMatrixMode(GL_PROJECTION); glLoadIdentity();

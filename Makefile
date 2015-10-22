@@ -1,6 +1,6 @@
 # Specify the compiler
 CC=g++
-LFLAGS =  -lX11 -lGLU -lGL -I/usr/X11R6/include -L/usr/X11R6/lib -pthread -lm
+LFLAGS =  -lX11 -lGLU -lglut -lGL -I/usr/X11R6/include -L/usr/X11R6/lib -pthread -lm
 
 #This command will be called 
 #when you run 'make'
@@ -12,11 +12,13 @@ pong: game.o player.o
 #Each class will need its own 
 #object file. For each class you create
 #add it to the make file 
+player.o: player.h player.cpp
+	$(CC) -c player.cpp
+
+
 game.o: player.o game.h game.cpp
 	$(CC) -c game.cpp player.o
 
-player.o: player.h player.cpp
-	$(CC) -c player.cpp
 
 clean:
 	rm -f pong
