@@ -26,6 +26,10 @@
 #include <GL/glut.h>
 #include <string>
 
+#include "keithH.cpp"
+#include <ctime>
+#include <time.h>
+
 
 using namespace std;
 
@@ -49,16 +53,18 @@ void physics(Game *game);
 void render(Game *game);
 void set_mouse_position(int x, int y);
 void show_mouse_cursor(const int onoff);
-void show_hud(int score1, int score2);
 
 
 int keys[65536];
 int xres = 640;
 int yres = 480;
 int interval = 1000 / 60;
+
+int timeStart;
 Game game;
 Player p1;
 Player p2;
+Hud *hud;
 
 //Idea:
 //Maybe use command line arguments to
@@ -66,32 +72,39 @@ Player p2;
 //i.e. ./pong name1 name2
 int main(int argc, char** argv)
 {
+  hud = new Hud(xres ,yres);
   initXWindows();
   init_opengl();
   
   //init(&game);
   srand(time(NULL));
+  timeStart = 0;
   //clock_gettime(CLOCK_REALTIME, &timePause);
   //clock_gettime(CLOCK_REALTIME, &timeStart);
   //set_mouse_position(100,100);
   int done=0;
+  time_t timeStart = time(NULL);
   while (!done) {
-  while (XPending(dpy)) {
-    XEvent e;
-    XNextEvent(dpy, &e);
-    check_resize(&e);
-    //check_mouse(&e, &game);
-    done = check_keys(&e);
-  }
-  // clock_gettime(CLOCK_REALTIME, &timeCurrent);
-  // timeSpan = timeDiff(&timeStart, &timeCurrent);
-  // timeCopy(&timeStart, &timeCurrent);
-  // physicsCountdown += timeSpan;
-  // while (physicsCountdown >= physicsRate) {
-  //   physics(&game);
-  //   physicsCountdown -= physicsRate;
-  // }
-  render(&game);
+    while (XPending(dpy)) {
+        XEvent e;
+        XNextEvent(dpy, &e);
+        check_resize(&e);
+        //check_mouse(&e, &game);
+        done = check_keys(&e);
+    }
+    render(&game);
+    //KEITH HARRYMANS ADDITION TO MAIN:
+    if (timeStart + 2.0 > time(NULL)){
+        //PASS showWelcome the high score:
+        hud->showWelcome(0);
+        hud->is_show_welcome = true;
+    }
+    else{
+        hud->showScore(p1.getScore(), p2.getScore());
+        hud->showCourtYard();
+        hud->is_show_welcome = false;
+    }
+    //---------------------------------------------------
   glXSwapBuffers(dpy, win);
   }
   cleanupXWindows();
@@ -116,7 +129,6 @@ void render(Game *g)
    //Paddle 2
    glRectf(-0.6f, -0.3f, -0.5f, -0.8f);
  
-   show_hud(p1.getScore(), p2.getScore());
 
 }
 
@@ -171,31 +183,7 @@ void set_title(void)
    XStoreName(dpy, win, "CS335 - PONG!");
  }
 
-void show_hud(int in_score1, int in_score2){
-    glPushMatrix();
-    glColor3ub(255,255,255);
-    //Print player 1's score:
-    glTranslatef(0.0, 1.0, 0.0);
-    glScalef(1/8.0, 1/8.0, 1/8.0);
-    string str1="Player 1 Score:" + in_score1;
-    string str2="Player 2 Score:" + in_score2;
-     
-    for(unsigned int i=0; i<str1.length(); i++)
-    {
-        glutStrokeCharacter(GLUT_STROKE_ROMAN,str1[i]);
-    }
-    //Print player 2's score:
-    glScalef(8.0, 8.0, 8.0);
-    glTranslatef(xres/2.0, 1.0, 0.0);
-    glScalef(1/8.0, 1/8.0, 1/8.0);
 
-    for(unsigned int i=0; i<str2.length(); i++)
-    {
-        glutStrokeCharacter(GLUT_STROKE_ROMAN,str2[i]);
-    }
-
-    glPopMatrix();
-}
 
  void reshape_window(int width, int height)
  {
@@ -211,11 +199,8 @@ void show_hud(int in_score1, int in_score2){
 
  void init_opengl(void)
  {
-  //OpenGL initialization
-  char fakeParam[] = "fake";
-  char *fakeargv[] = { fakeParam, NULL };
-  int fakeargc = 1;
-  glutInit( &fakeargc, fakeargv );
+  //OpenGL initialization  
+
 
   glViewport(0, 0, xres, yres);
   //Initialize matrices

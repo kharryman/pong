@@ -6,8 +6,6 @@ LFLAGS =  -lX11 -lGLU -lglut -lGL -I/usr/X11R6/include -L/usr/X11R6/lib -pthread
 #when you run 'make'
 all: pong
 
-pong: game.o player.o
-	$(CC) pong.cpp game.o player.o $(LFLAGS)  -o pong
 
 #Each class will need its own 
 #object file. For each class you create
@@ -15,10 +13,14 @@ pong: game.o player.o
 player.o: player.h player.cpp
 	$(CC) -c player.cpp
 
-
 game.o: player.o game.h game.cpp
 	$(CC) -c game.cpp player.o
 
+#keithH.o: player.o game.o
+#	$(CC) -c keithH.cpp player.o game.o
+
+pong: game.o player.o
+	$(CC) pong.cpp game.o player.o $(LFLAGS)  -o pong
 
 clean:
 	rm -f pong
